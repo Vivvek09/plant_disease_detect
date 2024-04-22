@@ -4,6 +4,7 @@ import { Image, Text, View } from "react-native";
 import { icons } from "../../constants";
 
 
+
 const TabIcon = ({ icon, color, name, focused }) => {
   return (
     <View className="flex items-center justify-center gap-2">
@@ -71,15 +72,15 @@ const TabLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="recent"
           options={{
-            title: "Profile",
+            title: "Recent",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.profile}
                 color={color}
-                name="Profile"
+                name="Recent"
                 focused={focused}
               />
             ),

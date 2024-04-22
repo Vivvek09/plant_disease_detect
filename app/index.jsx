@@ -6,10 +6,12 @@ import { Link } from "expo-router";
 import { images } from "../constants";
 import { ImageBackground } from "react-native";
 import CustomButton from "../components/CustomButton";
-
+import { useEffect } from "react";
 
 
 const Welcome = () => {
+
+ 
 
   return (
     <SafeAreaView className="bg-primary h-full">
