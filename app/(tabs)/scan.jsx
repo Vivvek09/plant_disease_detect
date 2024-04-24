@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Alert } from 'react-native';
+import { View, Image, ScrollView, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
-import { ScrollView } from 'react-native';
+import { saveImageToDatabase, loadLatestImagesFromDatabase } from '../../constants/database';
 
-
-export default function ScanPage() {
+const Scan = () => {
   const [image, setImage] = useState(require('../../assets/images/home.png'));
   const [cameraPermission, setCameraPermission] = useState(null);
 
@@ -26,7 +25,7 @@ export default function ScanPage() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync();
-    if (!result.canceled) {
+    if (!result.cancelled) {
       setImage({ uri: result.assets[0].uri });
     }
   };
@@ -38,28 +37,35 @@ export default function ScanPage() {
     }
 
     const photo = await ImagePicker.launchCameraAsync();
-    if (!photo.canceled) {
+    if (!photo.cancelled) {
       setImage({ uri: photo.assets[0].uri });
     }
   };
 
-  const diagnoseDisease = () => {
-    // Implement your diagnosis logic here
-    Alert.alert('Diagnosis', 'This feature is under development.');
+  const onDiagnose = async (imageUri) => {
+    try {
+      const imagePath = await saveImageToDatabase(imageUri); // Save the image to the database
+      console.log('Image saved to database:', imagePath);
+      // Implement any additional logic here after saving to the database
+    } catch (error) {
+      console.error('Error saving image to database:', error);
+      Alert.alert('Error', 'Failed to save image to database.');
+    }
   };
 
+
   return (
-    <SafeAreaView style={{height:'100%', padding:40}}>
-      <ScrollView>
-    <View style={{ flex: 1, alignItems: 'center' }}>
-      <Image source={image} style={{ width: 300, height: 300, marginBottom: 20, borderRadius:20 }} />
-      <View style={{justifyContent:'space-between', flexDirection:'row', width:'100%', paddingBottom:20}}>
-      <Button title="Upload Image" icon="image" onPress={pickImage} />
-      <Button title="Take Photo" icon="camera" onPress={takePhoto} />
-      </View>
-      <Button title="Diagnose Disease" onPress={diagnoseDisease} />
-    </View>
-    </ScrollView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ alignItems: 'center', paddingVertical: 40 }}>
+        <Image source={image} style={{ width: 300, height: 300, marginBottom: 20, borderRadius: 20 }} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 20 }}>
+          <Button title="Upload Image" icon="image" onPress={pickImage} />
+          <Button title="Take Photo" icon="camera" onPress={takePhoto} />
+        </View>
+        <Button title="Diagnose Disease" onPress={() => onDiagnose(image.uri)} />
+      </ScrollView>
     </SafeAreaView>
   );
-}
+};
+
+export default Scan;

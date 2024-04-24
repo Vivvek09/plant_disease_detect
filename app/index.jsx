@@ -7,7 +7,9 @@ import { images } from "../constants";
 import { ImageBackground } from "react-native";
 import CustomButton from "../components/CustomButton";
 import { useEffect } from "react";
+import { setupDatabase } from "../constants/database";
 
+setupDatabase();
 
 const Welcome = () => {
 

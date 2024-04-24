@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Linking } from 'react-native';
-import axios from 'axios';
 
 const NewsCard = () => {
   const [news, setNews] = useState([]);
@@ -9,8 +8,9 @@ const NewsCard = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await axios.get('https://newsapi.org/v2/everything?q=farmer&from=2024-03-21&sortBy=publishedAt&apiKey=d64b3bcfb79e4b53b7f587b3cd1ed688&pageSize=5');
-        setNews(response.data.articles);
+        const response = await fetch('https://newsapi.org/v2/everything?q=farmer&from=2024-03-21&sortBy=publishedAt&apiKey=d64b3bcfb79e4b53b7f587b3cd1ed688&pageSize=5');
+        const data = await response.json();
+        setNews(data.articles);
       } catch (error) {
         console.error('Error fetching news:', error);
       } finally {
